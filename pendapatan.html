@@ -347,4 +347,64 @@ function simpanPendapatan(){
   });
 
 }
+ function hitungTotal(){
+
+  const billing =
+  Number(
+    document.getElementById('billing').value
+  ) || 0;
+
+  const snack =
+  Number(
+    document.getElementById('snack').value
+  ) || 0;
+
+  const minuman =
+  Number(
+    document.getElementById('minuman').value
+  ) || 0;
+
+  const rokok =
+  Number(
+    document.getElementById('rokok').value
+  ) || 0;
+
+  const qris =
+  Number(
+    document.getElementById('qris').value
+  ) || 0;
+
+  const transfer =
+  Number(
+    document.getElementById('transfer').value
+  ) || 0;
+
+  // TOTAL PENJUALAN
+
+  const total =
+  billing + snack + minuman + rokok;
+
+  // KAS SEHARUSNYA
+
+  const kas =
+  total - qris - transfer;
+
+  // TAMPILKAN TOTAL
+
+  document
+  .getElementById('totalPenjualan')
+  .textContent =
+  'Rp ' +
+  total.toLocaleString('id-ID');
+
+  // TAMPILKAN KAS
+
+  document
+  .getElementById('kasSeharusnya')
+  .textContent =
+  'Rp ' +
+  kas.toLocaleString('id-ID');
+
+} 
+  
 </script>
