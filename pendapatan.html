@@ -2,26 +2,45 @@
 
 <label>Billing</label>
 <input type="number" id="billing">
+placeholder="0"
+oninput="hitungTotal()">
 
 <label>Snack</label>
 <input type="number" id="snack">
+placeholder="0"
+oninput="hitungTotal()">
 
 <label>Minuman</label>
 <input type="number" id="minuman">
+placeholder="0"
+oninput="hitungTotal()">
 
 <label>Rokok</label>
 <input type="number" id="rokok">
+placeholder="0"
+oninput="hitungTotal()">
 
 <label>QRIS</label>
 <input type="number" id="qris">
+placeholder="0"
+oninput="hitungTotal()">
 
 <label>Transfer</label>
 <input type="number" id="transfer">
+placeholder="0"
+oninput="hitungTotal()">
 
 <button onclick="simpanPendapatan()">
   SIMPAN
 </button>
 
+<h3 id="totalPenjualan">
+Total Penjualan : Rp 0
+</h3>
+
+<h3 id="kasSeharusnya">
+Kas Seharusnya : Rp 0
+</h3>
 <script>
 
 function simpanPendapatan(){
@@ -71,4 +90,44 @@ function simpanPendapatan(){
 
 }
 
+  function hitungTotal(){
+
+  const billing =
+  Number(document.getElementById('billing').value) || 0;
+
+  const snack =
+  Number(document.getElementById('snack').value) || 0;
+
+  const minuman =
+  Number(document.getElementById('minuman').value) || 0;
+
+  const rokok =
+  Number(document.getElementById('rokok').value) || 0;
+
+  const qris =
+  Number(document.getElementById('qris').value) || 0;
+
+  const transfer =
+  Number(document.getElementById('transfer').value) || 0;
+
+  const total =
+  billing + snack + minuman + rokok;
+
+  const kas =
+  total - qris - transfer;
+
+  document
+  .getElementById('totalPenjualan')
+  .textContent =
+  'Total Penjualan : Rp ' +
+  total.toLocaleString('id-ID');
+
+  document
+  .getElementById('kasSeharusnya')
+  .textContent =
+  'Kas Seharusnya : Rp ' +
+  kas.toLocaleString('id-ID');
+
+}
+  
 </script>
