@@ -350,20 +350,25 @@
 .then(res => res.json())
 .then(response => {
 
+  localStorage.setItem(
+    'id_shift',
+    response.id_shift
+  );
+
+  localStorage.setItem(
+    'operator',
+    operator
+  );
+
+  localStorage.setItem(
+    'shift',
+    selectedShift
+  );
+
   alert(
     'SHIFT BERHASIL DIMULAI'
   );
 
-  localStorage.setItem(
-  'operator',
-  operator
-);
-
-localStorage.setItem(
-  'shift',
-  selectedShift
-);
-  
   window.location.href =
   'dashboard.html';
 
