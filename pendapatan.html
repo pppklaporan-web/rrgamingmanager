@@ -262,53 +262,6 @@ button:hover{
 function simpanPendapatan(){
 
   const billing =
-  Number(
-    document.getElementById('billing').value
-  ) || 0;
-
-  const snack =
-  Number(
-    document.getElementById('snack').value
-  ) || 0;
-
-  const minuman =
-  Number(
-    document.getElementById('minuman').value
-  ) || 0;
-
-  const rokok =
-  Number(
-    document.getElementById('rokok').value
-  ) || 0;
-
-  const qris =
-  Number(
-    document.getElementById('qris').value
-  ) || 0;
-
-  const transfer =
-  Number(
-    document.getElementById('transfer').value
-  ) || 0;
-
-  const totalPenjualan =
-  billing + snack + minuman + rokok;
-
-  const kasSeharusnya =
-  totalPenjualan - qris - transfer;
-
-  alert(
-    'Total Penjualan : Rp ' +
-    totalPenjualan +
-    '\\nKas Seharusnya : Rp ' +
-    kasSeharusnya
-  );
-
-}
-
-  function hitungTotal(){
-
-  const billing =
   Number(document.getElementById('billing').value) || 0;
 
   const snack =
@@ -326,24 +279,72 @@ function simpanPendapatan(){
   const transfer =
   Number(document.getElementById('transfer').value) || 0;
 
-  const total =
+  const totalPenjualan =
   billing + snack + minuman + rokok;
 
-  const kas =
-  total - qris - transfer;
+  const kasSeharusnya =
+  totalPenjualan - qris - transfer;
 
-  document
-  .getElementById('totalPenjualan')
-  .textContent =
-  'Total Penjualan : Rp ' +
-  total.toLocaleString('id-ID');
+  // DATA YANG DIKIRIM
 
-  document
-  .getElementById('kasSeharusnya')
-  .textContent =
-  'Kas Seharusnya : Rp ' +
-  kas.toLocaleString('id-ID');
+  const dataPendapatan = {
+
+    action:'pendapatan',
+
+    id_shift:
+    localStorage.getItem('id_shift'),
+
+    operator:
+    localStorage.getItem('operator'),
+
+    shift:
+    localStorage.getItem('shift'),
+
+    billing:billing,
+    snack:snack,
+    minuman:minuman,
+    rokok:rokok,
+    qris:qris,
+    transfer:transfer,
+    totalPenjualan:totalPenjualan,
+    kasSeharusnya:kasSeharusnya
+
+  };
+
+  // KIRIM KE APPS SCRIPT
+
+  fetch(
+    'https://script.google.com/macros/s/AKfycbzXZB1p_rOiirz6eYJhQLcOwh5u1PUA4mW2YWeIwhgErqHOgCnxyCzXhRW-iYng9MhxuQ/exec',
+    {
+
+      method:'POST',
+
+      body:JSON.stringify(dataPendapatan)
+
+    }
+  )
+
+  .then(res => res.json())
+
+  .then(response => {
+
+    alert(
+      'Pendapatan berhasil disimpan'
+    );
+
+    console.log(response);
+
+  })
+
+  .catch(err => {
+
+    console.log(err);
+
+    alert(
+      'Gagal menyimpan pendapatan'
+    );
+
+  });
 
 }
-  
 </script>
