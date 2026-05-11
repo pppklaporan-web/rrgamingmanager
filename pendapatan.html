@@ -1,46 +1,262 @@
-<h2>Pendapatan Shift</h2>
+<div class="container">
 
-<label>Billing</label>
-<input type="number" id="billing">
-placeholder="0"
-oninput="hitungTotal()">
+  <div class="card">
 
-<label>Snack</label>
-<input type="number" id="snack">
-placeholder="0"
-oninput="hitungTotal()">
+    <div class="title">
+      <h2>💰 Pendapatan Shift</h2>
+      <p>Input pendapatan operator</p>
+    </div>
 
-<label>Minuman</label>
-<input type="number" id="minuman">
-placeholder="0"
-oninput="hitungTotal()">
+    <!-- BILLING -->
 
-<label>Rokok</label>
-<input type="number" id="rokok">
-placeholder="0"
-oninput="hitungTotal()">
+    <div class="form-group">
 
-<label>QRIS</label>
-<input type="number" id="qris">
-placeholder="0"
-oninput="hitungTotal()">
+      <label>Billing</label>
 
-<label>Transfer</label>
-<input type="number" id="transfer">
-placeholder="0"
-oninput="hitungTotal()">
+      <input
+      type="number"
+      id="billing"
+      placeholder="0"
+      oninput="hitungTotal()">
 
-<button onclick="simpanPendapatan()">
-  SIMPAN
-</button>
+    </div>
 
-<h3 id="totalPenjualan">
-Total Penjualan : Rp 0
-</h3>
+    <!-- SNACK -->
 
-<h3 id="kasSeharusnya">
-Kas Seharusnya : Rp 0
-</h3>
+    <div class="form-group">
+
+      <label>Snack</label>
+
+      <input
+      type="number"
+      id="snack"
+      placeholder="0"
+      oninput="hitungTotal()">
+
+    </div>
+
+    <!-- MINUMAN -->
+
+    <div class="form-group">
+
+      <label>Minuman</label>
+
+      <input
+      type="number"
+      id="minuman"
+      placeholder="0"
+      oninput="hitungTotal()">
+
+    </div>
+
+    <!-- ROKOK -->
+
+    <div class="form-group">
+
+      <label>Rokok</label>
+
+      <input
+      type="number"
+      id="rokok"
+      placeholder="0"
+      oninput="hitungTotal()">
+
+    </div>
+
+    <!-- QRIS -->
+
+    <div class="form-group">
+
+      <label>QRIS</label>
+
+      <input
+      type="number"
+      id="qris"
+      placeholder="0"
+      oninput="hitungTotal()">
+
+    </div>
+
+    <!-- TRANSFER -->
+
+    <div class="form-group">
+
+      <label>Transfer</label>
+
+      <input
+      type="number"
+      id="transfer"
+      placeholder="0"
+      oninput="hitungTotal()">
+
+    </div>
+
+    <!-- HASIL -->
+
+    <div class="result-box">
+
+      <h3>Total Penjualan</h3>
+
+      <p id="totalPenjualan">
+        Rp 0
+      </p>
+
+    </div>
+
+    <div class="result-box">
+
+      <h3>Kas Seharusnya</h3>
+
+      <p id="kasSeharusnya">
+        Rp 0
+      </p>
+
+    </div>
+
+    <!-- BUTTON -->
+
+    <button onclick="simpanPendapatan()">
+      SIMPAN PENDAPATAN
+    </button>
+
+  </div>
+
+</div>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  background:
+  linear-gradient(135deg,#020617,#0f172a,#111827);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  color:white;
+}
+
+.container{
+  width:100%;
+  max-width:500px;
+}
+
+.card{
+  background:rgba(15,23,42,0.9);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:28px;
+  padding:30px;
+  backdrop-filter:blur(12px);
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.3);
+}
+
+.title{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.title h2{
+  font-size:28px;
+  margin-bottom:8px;
+}
+
+.title p{
+  color:#94a3b8;
+  font-size:14px;
+}
+
+.form-group{
+  margin-bottom:18px;
+}
+
+label{
+  display:block;
+  margin-bottom:8px;
+  color:#cbd5e1;
+  font-size:14px;
+}
+
+input{
+  width:100%;
+  padding:14px 16px;
+  border:none;
+  outline:none;
+  border-radius:16px;
+  background:#111827;
+  color:white;
+  font-size:16px;
+  border:1px solid rgba(255,255,255,0.05);
+  transition:0.3s;
+}
+
+input:focus{
+  border-color:#38bdf8;
+  box-shadow:
+  0 0 0 4px rgba(56,189,248,0.15);
+}
+
+.result-box{
+  background:#111827;
+  border-radius:20px;
+  padding:18px;
+  margin-top:25px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.result-box h3{
+  font-size:18px;
+  margin-bottom:12px;
+}
+
+.result-box p{
+  color:#38bdf8;
+  font-size:22px;
+  font-weight:700;
+}
+
+button{
+  width:100%;
+  margin-top:25px;
+  padding:16px;
+  border:none;
+  border-radius:18px;
+  background:
+  linear-gradient(135deg,#38bdf8,#2563eb);
+  color:white;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:translateY(-3px);
+  box-shadow:
+  0 10px 25px rgba(37,99,235,0.3);
+}
+
+@media(max-width:600px){
+
+  .card{
+    padding:22px;
+  }
+
+  .title h2{
+    font-size:24px;
+  }
+
+}
+
+</style>
+
 <script>
 
 function simpanPendapatan(){
