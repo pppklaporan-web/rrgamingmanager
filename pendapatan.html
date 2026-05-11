@@ -21,3 +21,54 @@
 <button onclick="simpanPendapatan()">
   SIMPAN
 </button>
+
+<script>
+
+function simpanPendapatan(){
+
+  const billing =
+  Number(
+    document.getElementById('billing').value
+  ) || 0;
+
+  const snack =
+  Number(
+    document.getElementById('snack').value
+  ) || 0;
+
+  const minuman =
+  Number(
+    document.getElementById('minuman').value
+  ) || 0;
+
+  const rokok =
+  Number(
+    document.getElementById('rokok').value
+  ) || 0;
+
+  const qris =
+  Number(
+    document.getElementById('qris').value
+  ) || 0;
+
+  const transfer =
+  Number(
+    document.getElementById('transfer').value
+  ) || 0;
+
+  const totalPenjualan =
+  billing + snack + minuman + rokok;
+
+  const kasSeharusnya =
+  totalPenjualan - qris - transfer;
+
+  alert(
+    'Total Penjualan : Rp ' +
+    totalPenjualan +
+    '\\nKas Seharusnya : Rp ' +
+    kasSeharusnya
+  );
+
+}
+
+</script>
