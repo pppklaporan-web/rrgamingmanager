@@ -227,12 +227,12 @@
 
       <div class="info-box">
         <span>Operator</span>
-        <strong>Feri</strong>
+        <strong id="operatorNama"></strong>
       </div>
 
       <div class="info-box">
         <span>Shift</span>
-        <strong>PAGI</strong>
+        <strong id="shiftNama"></strong>
       </div>
 
       <div class="info-box">
@@ -426,7 +426,21 @@
     }
 
   }
+  
+const operator =
+localStorage.getItem('operator');
 
+const shift =
+localStorage.getItem('shift');
+
+document
+.getElementById('operatorNama')
+.innerHTML = operator;
+
+document
+.getElementById('shiftNama')
+.innerHTML = shift;
+  
 </script>
 
 </body>
