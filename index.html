@@ -333,12 +333,16 @@
       }
 
       const dataShift = {
-        shift: selectedShift,
-        operator,
-        uangAwal,
-        koin,
-        waktu: new Date()
-      };
+
+  action:'shift',
+
+  shift: selectedShift,
+  operator: operator,
+  uangAwal: uangAwal,
+  koin: koin,
+  waktu: new Date()
+
+};
 
       fetch('https://script.google.com/macros/s/AKfycbzXZB1p_rOiirz6eYJhQLcOwh5u1PUA4mW2YWeIwhgErqHOgCnxyCzXhRW-iYng9MhxuQ/exec', {
 
@@ -382,16 +386,8 @@
   console.log(err);
 
 });
-
-      alert(
-        'SHIFT BERHASIL DIMULAI\n\n' +
-        'Operator : ' + operator + '\n' +
-        'Shift : ' + selectedShift
-      );
-
-      // Nanti diarahkan ke dashboard shift
-      // window.location.href = 'dashboard.html';
     }
+
   </script>
 
 </body>
