@@ -259,6 +259,52 @@ button:hover{
 
 <script>
 
+function hitungTotal(){
+
+  const billing =
+  Number(document.getElementById('billing').value) || 0;
+
+  const snack =
+  Number(document.getElementById('snack').value) || 0;
+
+  const minuman =
+  Number(document.getElementById('minuman').value) || 0;
+
+  const rokok =
+  Number(document.getElementById('rokok').value) || 0;
+
+  const qris =
+  Number(document.getElementById('qris').value) || 0;
+
+  const transfer =
+  Number(document.getElementById('transfer').value) || 0;
+
+  // TOTAL
+
+  const total =
+  billing + snack + minuman + rokok;
+
+  // KAS
+
+  const kas =
+  total - qris - transfer;
+
+  // TAMPILKAN
+
+  document.getElementById(
+    'totalPenjualan'
+  ).innerHTML =
+  'Rp ' +
+  total.toLocaleString('id-ID');
+
+  document.getElementById(
+    'kasSeharusnya'
+  ).innerHTML =
+  'Rp ' +
+  kas.toLocaleString('id-ID');
+
+}
+
 function simpanPendapatan(){
 
   const billing =
@@ -285,8 +331,6 @@ function simpanPendapatan(){
   const kasSeharusnya =
   totalPenjualan - qris - transfer;
 
-  // DATA YANG DIKIRIM
-
   const dataPendapatan = {
 
     action:'pendapatan',
@@ -311,8 +355,6 @@ function simpanPendapatan(){
 
   };
 
-  // KIRIM KE APPS SCRIPT
-
   fetch(
     'https://script.google.com/macros/s/AKfycbzXZB1p_rOiirz6eYJhQLcOwh5u1PUA4mW2YWeIwhgErqHOgCnxyCzXhRW-iYng9MhxuQ/exec',
     {
@@ -328,11 +370,11 @@ function simpanPendapatan(){
 
   .then(response => {
 
+    console.log(response);
+
     alert(
       'Pendapatan berhasil disimpan'
     );
-
-    console.log(response);
 
   })
 
@@ -347,66 +389,7 @@ function simpanPendapatan(){
   });
 
 }
- function hitungTotal(){
 
-  const billing =
-  Number(
-    document.getElementById('billing').value
-  ) || 0;
-
-  const snack =
-  Number(
-    document.getElementById('snack').value
-  ) || 0;
-
-  const minuman =
-  Number(
-    document.getElementById('minuman').value
-  ) || 0;
-
-  const rokok =
-  Number(
-    document.getElementById('rokok').value
-  ) || 0;
-
-  const qris =
-  Number(
-    document.getElementById('qris').value
-  ) || 0;
-
-  const transfer =
-  Number(
-    document.getElementById('transfer').value
-  ) || 0;
-
-  // TOTAL PENJUALAN
-
-  const total =
-  billing + snack + minuman + rokok;
-
-  // KAS SEHARUSNYA
-
-  const kas =
-  total - qris - transfer;
-
-  // TAMPILKAN TOTAL
-
-  document
-  .getElementById('totalPenjualan')
-  .textContent =
-  'Rp ' +
-  total.toLocaleString('id-ID');
-
-  // TAMPILKAN KAS
-
-  document
-  .getElementById('kasSeharusnya')
-  .textContent =
-  'Rp ' +
-  kas.toLocaleString('id-ID');
-
-} 
-  
 </script>
 
 </body>
