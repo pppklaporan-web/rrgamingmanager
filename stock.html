@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Stock Opname</title>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  background:
+  linear-gradient(
+  135deg,
+  #020617,
+  #0f172a,
+  #111827
+  );
+
+  color:white;
+  min-height:100vh;
+  padding:20px;
+}
+
+.container{
+  width:100%;
+  max-width:700px;
+  margin:auto;
+}
+
+.card{
+  background:
+  rgba(15,23,42,0.9);
+
+  border:
+  1px solid
+  rgba(255,255,255,0.06);
+
+  border-radius:28px;
+
+  padding:30px;
+
+  backdrop-filter:blur(12px);
+
+  box-shadow:
+  0 10px 30px
+  rgba(0,0,0,0.3);
+}
+
+.title{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.title h2{
+  font-size:30px;
+  margin-bottom:8px;
+}
+
+.title p{
+  color:#94a3b8;
+  font-size:14px;
+}
+
+.stock-item{
+  background:#111827;
+  border-radius:22px;
+  padding:20px;
+  margin-bottom:20px;
+
+  border:
+  1px solid
+  rgba(255,255,255,0.05);
+}
+
+.stock-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+
+.stock-header h3{
+  font-size:20px;
+}
+
+.sisa{
+  background:#22c55e;
+  color:white;
+  padding:6px 14px;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:600;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:
+  repeat(3,1fr);
+
+  gap:15px;
+}
+
+.form-group label{
+  display:block;
+  margin-bottom:8px;
+  font-size:13px;
+  color:#cbd5e1;
+}
+
+.form-group input{
+  width:100%;
+  padding:12px;
+  border:none;
+  outline:none;
+  border-radius:14px;
+  background:#1e293b;
+  color:white;
+  font-size:15px;
+
+  border:
+  1px solid
+  rgba(255,255,255,0.05);
+}
+
+.form-group input:focus{
+  border-color:#38bdf8;
+}
+
+.summary{
+  margin-top:25px;
+
+  background:#111827;
+
+  border-radius:20px;
+
+  padding:20px;
+
+  border:
+  1px solid
+  rgba(255,255,255,0.05);
+}
+
+.summary h3{
+  margin-bottom:15px;
+}
+
+.summary-item{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+
+.summary-item:last-child{
+  margin-bottom:0;
+}
+
+button{
+  width:100%;
+  margin-top:25px;
+  padding:18px;
+  border:none;
+  border-radius:18px;
+
+  background:
+  linear-gradient(
+  135deg,
+  #38bdf8,
+  #2563eb
+  );
+
+  color:white;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:translateY(-3px);
+
+  box-shadow:
+  0 10px 25px
+  rgba(37,99,235,0.3);
+}
+
+@media(max-width:650px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="card">
+
+    <div class="title">
+      <h2>📦 Stock Opname</h2>
+      <p>
+        Pemeriksaan stock operator
+      </p>
+    </div>
+
+    <!-- ITEM 1 -->
+
+    <div class="stock-item">
+
+      <div class="stock-header">
+        <h3>🥤 Teh Botol</h3>
+
+        <div class="sisa"
+        id="sisa_teh">
+          Sisa : 0
+        </div>
+      </div>
+
+      <div class="grid">
+
+        <div class="form-group">
+          <label>Stock Awal</label>
+
+          <input
+          type="number"
+          id="awal_teh"
+          value="0"
+          oninput="hitungStock()">
+        </div>
+
+        <div class="form-group">
+          <label>Masuk</label>
+
+          <input
+          type="number"
+          id="masuk_teh"
+          value="0"
+          oninput="hitungStock()">
+        </div>
+
+        <div class="form-group">
+          <label>Terjual</label>
+
+          <input
+          type="number"
+          id="jual_teh"
+          value="0"
+          oninput="hitungStock()">
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ITEM 2 -->
+
+    <div class="stock-item">
+
+      <div class="stock-header">
+        <h3>🍜 Indomie</h3>
+
+        <div class="sisa"
+        id="sisa_indomie">
+          Sisa : 0
+        </div>
+      </div>
+
+      <div class="grid">
+
+        <div class="form-group">
+          <label>Stock Awal</label>
+
+          <input
+          type="number"
+          id="awal_indomie"
+          value="0"
+          oninput="hitungStock()">
+        </div>
+
+        <div class="form-group">
+          <label>Masuk</label>
+
+          <input
+          type="number"
+          id="masuk_indomie"
+          value="0"
+          oninput="hitungStock()">
+        </div>
+
+        <div class="form-group">
+          <label>Terjual</label>
+
+          <input
+          type="number"
+          id="jual_indomie"
+          value="0"
+          oninput="hitungStock()">
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ITEM 3 -->
+
+    <div class="stock-item">
+
+      <div class="stock-header">
+        <h3>🚬 Rokok</h3>
+
+        <div class="sisa"
+        id="sisa_rokok">
+          Sisa : 0
+        </div>
+      </div>
+
+      <div class="grid">
+
+        <div class="form-group">
+          <label>Stock Awal</label>
+
+          <input
+          type="number"
+          id="awal_rokok"
+          value="0"
+          oninput="hitungStock()">
+        </div>
+
+        <div class="form-group">
+          <label>Masuk</label>
+
+          <input
+          type="number"
+          id="masuk_rokok"
+          value="0"
+          oninput="hitungStock()">
+        </div>
+
+        <div class="form-group">
+          <label>Terjual</label>
+
+          <input
+          type="number"
+          id="jual_rokok"
+          value="0"
+          oninput="hitungStock()">
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SUMMARY -->
+
+    <div class="summary">
+
+      <h3>📊 Ringkasan Stock</h3>
+
+      <div class="summary-item">
+        <span>Total Barang</span>
+
+        <strong id="totalBarang">
+          0
+        </strong>
+      </div>
+
+      <div class="summary-item">
+        <span>Total Terjual</span>
+
+        <strong id="totalTerjual">
+          0
+        </strong>
+      </div>
+
+      <div class="summary-item">
+        <span>Sisa Keseluruhan</span>
+
+        <strong id="sisaTotal">
+          0
+        </strong>
+      </div>
+
+    </div>
+
+    <!-- BUTTON -->
+
+    <button onclick="simpanStock()">
+      SIMPAN STOCK
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+function hitungStock(){
+
+  // TEH
+
+  const awalTeh =
+  Number(
+  document.getElementById(
+  'awal_teh').value) || 0;
+
+  const masukTeh =
+  Number(
+  document.getElementById(
+  'masuk_teh').value) || 0;
+
+  const jualTeh =
+  Number(
+  document.getElementById(
+  'jual_teh').value) || 0;
+
+  const sisaTeh =
+  awalTeh + masukTeh - jualTeh;
+
+  document.getElementById(
+  'sisa_teh').innerHTML =
+  'Sisa : ' + sisaTeh;
+
+
+  // INDOMIE
+
+  const awalIndomie =
+  Number(
+  document.getElementById(
+  'awal_indomie').value) || 0;
+
+  const masukIndomie =
+  Number(
+  document.getElementById(
+  'masuk_indomie').value) || 0;
+
+  const jualIndomie =
+  Number(
+  document.getElementById(
+  'jual_indomie').value) || 0;
+
+  const sisaIndomie =
+  awalIndomie +
+  masukIndomie -
+  jualIndomie;
+
+  document.getElementById(
+  'sisa_indomie').innerHTML =
+  'Sisa : ' + sisaIndomie;
+
+
+  // ROKOK
+
+  const awalRokok =
+  Number(
+  document.getElementById(
+  'awal_rokok').value) || 0;
+
+  const masukRokok =
+  Number(
+  document.getElementById(
+  'masuk_rokok').value) || 0;
+
+  const jualRokok =
+  Number(
+  document.getElementById(
+  'jual_rokok').value) || 0;
+
+  const sisaRokok =
+  awalRokok +
+  masukRokok -
+  jualRokok;
+
+  document.getElementById(
+  'sisa_rokok').innerHTML =
+  'Sisa : ' + sisaRokok;
+
+
+  // SUMMARY
+
+  const totalBarang =
+  awalTeh +
+  awalIndomie +
+  awalRokok;
+
+  const totalTerjual =
+  jualTeh +
+  jualIndomie +
+  jualRokok;
+
+  const sisaTotal =
+  sisaTeh +
+  sisaIndomie +
+  sisaRokok;
+
+  document.getElementById(
+  'totalBarang').innerHTML =
+  totalBarang;
+
+  document.getElementById(
+  'totalTerjual').innerHTML =
+  totalTerjual;
+
+  document.getElementById(
+  'sisaTotal').innerHTML =
+  sisaTotal;
+
+}
+
+function simpanStock(){
+
+  const dataStock = {
+
+    action:'stock',
+
+    id_shift:
+    localStorage.getItem(
+    'id_shift'),
+
+    operator:
+    localStorage.getItem(
+    'operator'),
+
+    shift:
+    localStorage.getItem(
+    'shift'),
+
+    teh_botol:{
+      awal:
+      document.getElementById(
+      'awal_teh').value,
+
+      masuk:
+      document.getElementById(
+      'masuk_teh').value,
+
+      terjual:
+      document.getElementById(
+      'jual_teh').value
+    },
+
+    indomie:{
+      awal:
+      document.getElementById(
+      'awal_indomie').value,
+
+      masuk:
+      document.getElementById(
+      'masuk_indomie').value,
+
+      terjual:
+      document.getElementById(
+      'jual_indomie').value
+    },
+
+    rokok:{
+      awal:
+      document.getElementById(
+      'awal_rokok').value,
+
+      masuk:
+      document.getElementById(
+      'masuk_rokok').value,
+
+      terjual:
+      document.getElementById(
+      'jual_rokok').value
+    }
+
+  };
+
+  console.log(dataStock);
+
+  alert(
+  'Stock berhasil disimpan');
+
+}
+
+hitungStock();
+
+</script>
+
+</body>
+</html>
