@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>POS SYSTEM</title>
+  <style>
+    body { font-family: Arial; padding: 10px; }
+    .box { border: 1px solid #ddd; padding: 10px; margin: 5px; border-radius: 8px; }
+    input, select { padding: 5px; margin: 3px; }
+    button { padding: 10px; margin-top: 10px; cursor: pointer; }
+  </style>
+  <link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#111827">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+
+<h2>POS SYSTEM LIVE</h2>
+
+<div class="admin-only">
+  <h3>⚙️ ADMIN PANEL</h3>
+  <button>Tambah Operator</button>
+  <button>Reset Data</button>
+  <button>Export Laporan</button>
+</div>
+
+<div id="loginBox" class="box">
+  <h3>🔐 LOGIN OPERATOR</h3>
+
+  Username: <input id="username"><br>
+  PIN: <input id="pin" type="password"><br>
+
+  <button onclick="login()">LOGIN</button>
+</div>
+
+<div id="app" style="display:none;">
+
+   SEMUA FITUR POS
+
+</div>
+
+<!-- SHIFT INFO -->
+<div class="box">
+  <div id="operatorInfo"></div>
+  Shift:
+  <select id="shift">
+    <option>PAGI</option>
+    <option>MALAM</option>
+  </select>
+</div>
+
+<hr>
+
+<!-- STOCK INPUT -->
+<h3>STOCK OPNAME</h3>
+<div id="stockList"></div>
+<button onclick="simpanStock()">Simpan Stock</button>
+
+<hr>
+
+<!-- TRANSAKSI -->
+<h3>PENDAPATAN</h3>
+<h3>💰 INPUT PENDAPATAN</h3>
+
+<div class="box">
+  Total: <input id="total" type="number"><br>
+
+  Metode:
+  <select id="metode">
+    <option value="TUNAI">TUNAI</option>
+    <option value="QRIS">QRIS</option>
+  </select><br>
+
+  Kas Laci (Auto): <input id="autoKas" value="0" readonly><br>
+
+  Keterangan: <input id="ket"><br>
+
+  <button onclick="simpanAll()">SIMPAN</button>
+</div>
+
+<h3>🔁 SERAH TERIMA SHIFT</h3>
+
+<div class="box">
+  Operator Dari: <input id="from"><br>
+  Operator Ke: <input id="to"><br>
+
+  Shift:
+  <select id="shiftST">
+    <option>PAGI</option>
+    <option>MALAM</option>
+  </select><br>
+
+  Catatan: <input id="catatan"><br>
+
+  <button onclick="serahTerima()">Proses Serah Terima</button>
+</div>
+
+<hr>
+
+<h3>⚠️ CEK SELISIH KAS</h3>
+
+<div class="box">
+
+  Kas Fisik:
+  <input id="saldoFisik" type="number"><br>
+
+  Catatan:
+  <input id="catatanSelisih"><br>
+
+  <button onclick="cekSelisihKasUI()">
+    CEK SELISIH
+  </button>
+
+</div>
+
+<script>
+
+let barang = [];
+
+/* =========================
+   CHECK LOGIN
+========================= */
+window.onload = function () {
+
+  const op = JSON.parse(sessionStorage.getItem("operator"));
+
+  if (!op) {
+    document.getElementById("loginBox").style.display = "block";
+    document.getElementById("app").style.display = "none";
+    return;
+  }
+
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("app").style.display = "block";
+
+  document.getElementById("welcome").innerText =
+    "Selamat datang " + op.nama + " (" + op.role + ")";
+
+  document.getElementById("operatorInfo").innerText =
+    "Operator Aktif: " + op.nama;
+
+  applyRoleAccess(op.role);
+
+  loadBarang();
+};
+
+/* =========================
+   LOGIN
+========================= */
+function login() {
+
+  const username = document.getElementById("username").value;
+  const pin = document.getElementById("pin").value;
+
+  google.script.run.withSuccessHandler(res => {
+
+    if (res.success) {
+
+      sessionStorage.setItem("operator", JSON.stringify(res));
+
+      location.reload();
+
+    } else {
+      alert("Login gagal");
+    }
+
+  }).loginOperator(username, pin);
+}
+
+/* =========================
+   ROLE ACCESS
+========================= */
+function applyRoleAccess(role) {
+
+  if (role === "OPERATOR") {
+
+    const adminMenu = document.querySelectorAll(".admin-only");
+
+    adminMenu.forEach(el => {
+      el.style.display = "none";
+    });
+  }
+}
+
+/* =========================
+   LOAD BARANG
+========================= */
+function loadBarang() {
+
+  google.script.run.withSuccessHandler(res => {
+
+    barang = res;
+    renderStock();
+
+  }).getBarang();
+}
+
+/* =========================
+   RENDER STOCK
+========================= */
+function renderStock() {
+
+  let html = "";
+
+  barang.forEach((b, i) => {
+
+    html += `
+      <div class="box">
+        <b>${b.nama}</b><br>
+
+        Awal:
+        <input id="awal_${i}" type="number" value="0">
+
+        Akhir:
+        <input id="akhir_${i}" type="number" value="0">
+      </div>
+    `;
+  });
+
+  document.getElementById("stockList").innerHTML = html;
+}
+
+/* =========================
+   SIMPAN STOCK
+========================= */
+function simpanStock() {
+
+  const op = JSON.parse(sessionStorage.getItem("operator"));
+
+  let items = barang.map((b, i) => ({
+    id_barang: b.id,
+    stok_awal: parseInt(document.getElementById("awal_" + i).value) || 0,
+    stok_akhir: parseInt(document.getElementById("akhir_" + i).value) || 0
+  }));
+
+  let data = {
+    operator: op.nama,
+    shift: document.getElementById("shift").value,
+    tanggal: new Date().toLocaleDateString(),
+    items: items
+  };
+
+  google.script.run.withSuccessHandler(res => {
+
+    alert("Stock tersimpan ID: " + res.id_stock);
+
+  }).simpanStock(data);
+}
+
+/* =========================
+   SIMPAN TRANSAKSI + KAS
+========================= */
+function simpanAll() {
+
+  const op = JSON.parse(sessionStorage.getItem("operator"));
+
+  const total = parseInt(document.getElementById("total").value) || 0;
+
+  const data = {
+    tanggal: new Date().toLocaleDateString(),
+    jam: new Date().toLocaleTimeString(),
+    operator: op.nama,
+    shift: document.getElementById("shift").value,
+    total: total,
+    metode: document.getElementById("metode").value,
+    keterangan: document.getElementById("ket").value
+  };
+
+  google.script.run.withSuccessHandler(res => {
+
+    alert(
+      "TRX sukses\n" +
+      "ID: " + res.id +
+      "\nSaldo: " + res.saldo_akhir
+    );
+
+  }).saveTransaksiDanKas(data);
+}
+
+/* =========================
+   SERAH TERIMA
+========================= */
+function serahTerima() {
+
+  const data = {
+    tanggal: new Date().toLocaleDateString(),
+    shift: document.getElementById("shiftST").value,
+    dari: document.getElementById("from").value,
+    ke: document.getElementById("to").value,
+    catatan: document.getElementById("catatan").value
+  };
+
+  google.script.run.withSuccessHandler(res => {
+
+    alert(
+      "Serah terima sukses\n" +
+      "ID: " + res.id
+    );
+
+  }).saveSerahTerima(data);
+}
+
+/* =========================
+   LOGOUT
+========================= */
+function logout() {
+
+  sessionStorage.removeItem("operator");
+
+  location.reload();
+}
+
+function tambahOperatorUI() {
+
+  const op = JSON.parse(
+    sessionStorage.getItem("operator")
+  );
+
+  const data = {
+    id: "OP_" + Date.now(),
+    nama: prompt("Nama Operator"),
+    username: prompt("Username"),
+    pin: prompt("PIN"),
+    role: prompt("Role (ADMIN/OPERATOR)")
+  };
+
+  google.script.run
+    .withSuccessHandler(res => {
+
+      alert("Operator berhasil ditambah");
+
+    })
+    .tambahOperator(data, op);
+}
+
+function cekSelisihKasUI(){
+
+  const op = JSON.parse(
+    sessionStorage.getItem("operator")
+  );
+
+  const data = {
+
+    tanggal:
+      new Date().toLocaleDateString(),
+
+    operator:
+      op.nama,
+
+    shift:
+      document.getElementById("shift").value,
+
+    saldo_fisik:
+      document.getElementById("saldoFisik").value,
+
+    catatan:
+      document.getElementById("catatanSelisih").value
+  };
+
+  google.script.run
+    .withSuccessHandler(res => {
+
+      if(res.status === "SELISIH"){
+
+        alert(
+          "⚠️ SELISIH KAS!\n\n" +
+          "Sistem: Rp " + res.saldoSistem +
+          "\nFisik: Rp " + res.saldoFisik +
+          "\nSelisih: Rp " + res.selisih
+        );
+
+      } else {
+
+        alert("✅ Kas Aman");
+      }
+
+    })
+    .cekSelisihKas(data);
+}
+
+google.script.run
+  .withSuccessHandler(res => {
+
+    alert("TRX sukses");
+
+    // OPEN STRUK
+    const url =
+      window.location.origin +
+      window.location.pathname +
+
+      "?page=struk" +
+
+      "&tanggal=" + encodeURIComponent(data.tanggal) +
+      "&jam=" + encodeURIComponent(data.jam) +
+      "&operator=" + encodeURIComponent(data.operator) +
+      "&shift=" + encodeURIComponent(data.shift) +
+      "&total=" + encodeURIComponent(data.total) +
+      "&metode=" + encodeURIComponent(data.metode) +
+      "&ket=" + encodeURIComponent(data.keterangan);
+
+    window.open(url);
+
+  })
+  .saveTransaksiDanKas(data);
+
+
+</script>
+
+<script>
+
+if ("serviceWorker" in navigator) {
+
+  navigator.serviceWorker
+    .register("service-worker.js")
+
+    .then(() => {
+
+      console.log(
+        "Service Worker Registered"
+      );
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<head>
+  <title>Dashboard Admin</title>
+
+  <style>
+
+    body{
+      font-family:Arial;
+      background:#f5f5f5;
+      padding:20px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:15px;
+    }
+
+    .card{
+      background:white;
+      padding:20px;
+      border-radius:12px;
+      box-shadow:0 2px 8px rgba(0,0,0,.1);
+    }
+
+    h1{
+      margin-bottom:20px;
+    }
+
+    .title{
+      color:gray;
+      font-size:14px;
+    }
+
+    .value{
+      font-size:28px;
+      font-weight:bold;
+      margin-top:10px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      background:white;
+    }
+
+    th, td{
+      padding:10px;
+      border-bottom:1px solid #ddd;
+      text-align:left;
+    }
+
+  </style>
+</head>
+<body>
+
+<h1>📊 DASHBOARD SUPER ADMIN</h1>
+
+<br><br>
+
+<div class="card">
+
+  <h3>📈 Grafik Pendapatan</h3>
+
+  <canvas id="chartPendapatan"></canvas>
+
+</div>
+
+<div class="grid">
+
+  <div class="card">
+    <div class="title">Total Pendapatan</div>
+    <div class="value" id="pendapatan">Rp 0</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Kas Laci</div>
+    <div class="value" id="kas">Rp 0</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Total Transaksi</div>
+    <div class="value" id="trx">0</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Operator Aktif</div>
+    <div class="value" id="operator">0</div>
+  </div>
+
+</div>
+
+<button onclick="exportPDF()">
+  📄 Export PDF
+</button>
+
+<button onclick="backupDatabase()">
+  ☁️ Backup Database
+</button>
+
+<br><br>
+
+<h2>🧾 Audit Log Terbaru</h2>
+
+<table>
+
+  <thead>
+    <tr>
+      <th>Tanggal</th>
+      <th>Operator</th>
+      <th>Aktivitas</th>
+      <th>Detail</th>
+    </tr>
+  </thead>
+
+  <tbody id="auditTable"></tbody>
+
+</table>
+
+<script>
+
+loadDashboard();
+
+/* =========================
+   LOAD DASHBOARD
+========================= */
+
+function loadDashboard(){
+
+  google.script.run
+    .withSuccessHandler(renderDashboard)
+    .getDashboardData();
+}
+
+/* =========================
+   RENDER DASHBOARD
+========================= */
+
+function renderDashboard(data){
+
+  document.getElementById("pendapatan")
+    .innerText =
+      "Rp " + data.totalPendapatan.toLocaleString();
+
+  document.getElementById("kas")
+    .innerText =
+      "Rp " + data.kas.toLocaleString();
+
+  document.getElementById("trx")
+    .innerText =
+      data.totalTrx;
+
+  document.getElementById("operator")
+    .innerText =
+      data.operatorAktif;
+
+  let html = "";
+
+  data.audit.forEach(a => {
+
+    html += `
+      <tr>
+        <td>${a.tanggal}</td>
+        <td>${a.operator}</td>
+        <td>${a.aktivitas}</td>
+        <td>${a.detail}</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("auditTable")
+    .innerHTML = html;
+}
+
+function exportPDF(){
+
+  google.script.run
+    .withSuccessHandler(url => {
+
+      window.open(url);
+
+    })
+    .exportLaporanPDF();
+}
+
+let chartPendapatan;
+renderChart(data.chartLabels, data.chartData);
+
+function renderChart(labels, dataChart){
+
+  const ctx =
+    document
+      .getElementById("chartPendapatan");
+
+  // destroy chart lama
+  if(chartPendapatan){
+    chartPendapatan.destroy();
+  }
+
+  chartPendapatan = new Chart(ctx, {
+
+    type: "line",
+
+    data: {
+
+      labels: labels,
+
+      datasets: [{
+
+        label: "Pendapatan",
+
+        data: dataChart,
+
+        tension: 0.3,
+
+        fill: false
+
+      }]
+    },
+
+    options: {
+
+      responsive: true,
+
+      plugins: {
+
+        legend: {
+          display: true
+        }
+
+      }
+
+    }
+
+  });
+}
+
+function backupDatabase(){
+
+  if(
+    !confirm(
+      "Backup database sekarang?"
+    )
+  ) return;
+
+  google.script.run
+    .withSuccessHandler(res => {
+
+      alert(
+        "✅ Backup sukses\n\n" +
+        res.fileName
+      );
+
+      window.open(res.url);
+
+    })
+    .backupSpreadsheet();
+}
+
+</script>
+
+</body>
+</html>
